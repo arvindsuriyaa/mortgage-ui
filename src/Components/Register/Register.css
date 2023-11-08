@@ -1,0 +1,52 @@
+.form_content
+{
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+    line-height: 20px;
+    
+}
+.register_form
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+ 
+    
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.register_header
+{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+}
+.register_container
+{
+  border: 2px solid black;
+ 
+  width:500px;
+}
+.register_text
+{
+  color: white;
+  ;
+}
+.register_text_container
+{
+  background-color: purple;
+  width: 100%;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height:60px;
+}

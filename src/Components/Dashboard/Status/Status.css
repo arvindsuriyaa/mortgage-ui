@@ -1,0 +1,10 @@
+.loan_header
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap:10%;
+    flex-direction: column;
+     
+}
+ 

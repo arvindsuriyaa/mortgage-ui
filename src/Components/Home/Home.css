@@ -1,0 +1,194 @@
+.main_container
+{   margin: 0px;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    grid-gap:2em;
+    width:100%;
+    margin-top: -20px;
+
+    
+}
+.heading_font_o
+{
+    color: white !important;
+    font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+.main_container > div:nth-child(odd)
+{
+    background-color: rgb(245,240,233);
+    background: repeating-linear-gradient(
+        45deg,
+        rgb(66,21,94),
+        rgb(66,21,94)
+      );
+      color: white;
+}
+.para0
+{
+    height: 600px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.main_wrapper
+{   
+    height: 70%;
+    width: 60%;
+    background-color: white;
+
+}
+main
+{
+    margin-top: 24px;
+}
+
+.graph
+{
+    height: 300px;
+    width: 600px;
+}
+.main_content
+{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: black;
+}
+.heading_font
+{
+    font-family:'Times New Roman', Times, serif;
+    color: black;
+}
+.flex
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+.p
+{
+    width: 500px;
+    padding-top: 20px;
+    font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-weight: bold;
+}
+h3
+{
+    font-family:cursive;
+    padding-bottom: 20px;
+    padding-top: 20px;
+}
+.address
+{
+    width: 500px;
+    
+}
+.search
+{
+    display: flex;
+    justify-content: flex-end;
+    margin: 0px;
+    
+
+}
+.fa-solid, .fas {
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    position:  absolute;
+    right: 25px;
+    padding-top: 6px;
+}
+.color
+{
+    color: purple;
+}
+.contact_font
+{
+    font-weight: bolder;
+    color: purple;
+    font-family: cursive;
+}
+.picture
+{
+    display: none;
+}
+@media (max-width:645px)
+{
+
+    body
+    {
+        
+        width: 100%;
+        
+    }
+    .main_container
+    {
+        
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        /* overflow-x: hidden; */
+        border: 0px;
+        
+    }
+    .main_container > div 
+    {
+        width: 90%;
+        display: flex;
+        align-items: center;
+        border: 0;
+        
+    }
+    
+    .graph
+    {
+        display: none;
+    }
+    .main_content
+    {
+        width: 80%;
+    }
+    .main_container > div > p
+    {
+        
+        width: 70% !important;
+        word-wrap: break-word;
+        font-size: smaller;
+        margin-left: 20px;
+    }
+
+    .main_container > div:nth-child(odd)
+{
+    background-color: rgb(245,240,233);
+    background: repeating-linear-gradient(
+        45deg,
+        rgb(66,21,94),
+        rgb(66,21,94)
+      );
+      color: white;
+      width: 100%;
+      
+}
+.main_container > div > h3 
+{
+    font-size: large;
+    font-weight: bolder;
+}
+.picture
+{
+    width: 100%;
+    display: block;
+}
+.main_container > div > img
+{
+    width: 80%;
+}
+.home_head_font
+{
+    font-size: small !important;
+    font-weight: bolder !important;
+}
+}

@@ -1,0 +1,55 @@
+.emi_container
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+.emi_label
+{
+    width: 150px;
+    font-size: 20px;
+}
+
+.table_emi
+{
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    
+    width: 700px;
+
+}
+.table_emi_container
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+.purples
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: purple !important;
+}
+.emi_description
+{
+    width: 700px;
+}
+.emi_sc
+{
+    color:red;
+    width: 700px;
+}

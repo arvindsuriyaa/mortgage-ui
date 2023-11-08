@@ -1,0 +1,31 @@
+.enquire_form_content
+{
+    width: 400px;
+}
+.enquire_flex
+{
+    display:flex;
+    align-items: center;
+    justify-content: center;
+}
+.enquire_data
+{
+    width: 40vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+.enquire_description
+{
+    width: 550px;
+    margin-top: 20px;
+}
+.eq_form
+{
+    width: 40vw;
+}
+.enquire_pic
+{
+    margin-bottom: 70px !important;
+}

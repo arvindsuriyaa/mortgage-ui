@@ -1,0 +1,140 @@
+.card_container
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #280e83;
+    opacity: 1;
+    background-image: radial-gradient(circle at center center, #998da1, #12011d), repeating-radial-gradient(circle at center center, #ede3f3, #ede3f3, 4px, transparent 8px, transparent 4px);
+    background-blend-mode: multiply;
+    padding: 130px;
+     
+}
+.summary
+{
+    color: white;
+    background-color: #280e83;
+    opacity: 1;
+    background-image: radial-gradient(circle at center center, #998da1, #12011d), repeating-radial-gradient(circle at center center, #ede3f3, #ede3f3, 4px, transparent 8px, transparent 4px);
+    background-blend-mode: multiply;
+}
+.card_body
+{
+    height: 300px;
+    width: 500px;
+    background-image: linear-gradient(rgb(122, 92, 229),rgb(37, 37, 113));
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border-radius: 20px;
+    transition: all 0.5s ease;
+}
+.nat_card_logo
+{
+    display: flex;
+    justify-content: flex-end;
+    user-select: none;
+}
+.card_logo_main
+{
+    margin-right: 40px;
+    margin-top: 30px;
+}
+.chip
+{
+    height: 60px;
+    width: 60px;
+    background-color: gold;
+    display: flex;
+    justify-content: space-around;
+    align-items: space-around;
+    margin-left: 20px;
+}
+.line1
+{
+    height: 60px;
+    width: 2px;
+    background-color: black;
+    display:flex;
+    justify-content: flex-start;
+}
+.line2
+{
+    width: 60px;
+    height: 2px;
+    background-color: black;
+}
+.cardnumber
+{
+    color: white;
+    font-weight: bolder;
+    font-size: 30px;
+    margin-top: 12px;
+    margin-left: 20px;
+    user-select: none;
+}
+.card_validity
+{
+    color: white;
+    font-weight: bolder;
+    font-size: 15px;
+    margin-left: 20px;
+    margin-top: 12px;
+    user-select: none;
+}
+.cardholder_name
+{
+    color: white;
+    font-weight: bolder;
+    font-size: 20px;
+    margin-left: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: -10px;
+    user-select: none;
+}
+.visa_logo
+{
+    margin-right: 30px;
+    margin-bottom: 30px;
+    user-select: none;
+}
+.summary_container
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #42155E;
+    opacity: 1;
+    background-image: radial-gradient(circle at center center, #ede3f3, #42155E), repeating-radial-gradient(circle at center center, #ede3f3, #ede3f3, 4px, transparent 8px, transparent 4px);
+    background-blend-mode: multiply;
+    padding-bottom: 20px;
+}
+.summary
+{
+    height: 20%;
+   
+    color: white;
+ 
+    
+
+}
+.summarise
+{
+    display: flex;
+    justify-content: center;
+}
+.summary_heading
+
+{
+    margin-left: 60px;
+    margin-right: 40px;
+}
+.summary_content
+{
+    width: 600px;
+}
+.card_body:hover {
+    transform: scale(1.1);
+    box-shadow: lightseagreen 2px 2px 2px 2px;
+}
