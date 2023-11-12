@@ -16,6 +16,8 @@ import axios from "axios";
 import { Navigate, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 // import { Alert, AlertIcon, AlertDescription } from "@chakra-ui/core";
+import "react-toastify/dist/ReactToastify.css";
+
 export default function Register() {
   const acc_no_reg_ex = /^6\d{7}$/;
   const id_no_reg_ex = /^8\d{6}$/;
@@ -78,19 +80,23 @@ export default function Register() {
         .then((response) => {
           console.log(response);
           console.log(values);
-          // toast.success("Registration Successful!", {
-          //   position: "bottom-right",
-          //   autoClose: 2000,
-          //   hideProgressBar: false,
-          //   closeOnClick: true,
-          //   pauseOnHover: true,
-          //   draggable: true,
-          //   progress: 0,
-          //   theme: "dark",
-          // });
-          setTimeout(() => {
-            navigate("/login");
-          }, 1000);
+          if (response?.data?.success) {
+            toast.success("Registration Successful!", {
+              position: "bottom-right",
+              autoClose: 2000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: 0,
+              theme: "dark",
+            });
+            setTimeout(() => {
+              navigate("/login");
+            }, 1000);
+          } else {
+            alert(response?.data?.message);
+          }
         })
         .catch((error) => {
           //   setShowAlert(true);

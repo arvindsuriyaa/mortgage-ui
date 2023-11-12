@@ -10,16 +10,24 @@ export default function Dashboard_Home() {
   const [validation, setValidation] = useState([]);
   useEffect(() => {
     const id = sessionStorage.getItem("id");
+    console.log('id: ', id);
     axios
-      .get(`http://localhost:8080/api/cust/get/${id}`, {
+      .get(`${process.env.REACT_APP_API_PORT}/api/cust/get/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       })
       .then((obj) => {
-        setValidation(true);
-        setUserdata(obj.data);
-        console.log(userdata);
+        console.log("obj: ", obj);
+        if (!obj?.data?.success) {
+          setValidation(false);
+          sessionStorage.removeItem("id");
+          sessionStorage.removeItem("token");
+        } else {
+          setValidation(true);
+          setUserdata(obj?.data?.data?.[0]);
+          console.log(userdata);
+        }
       })
       .catch((error) => {
         setValidation(false);

@@ -39,9 +39,9 @@ export default function ForgotPassword() {
           }
         );
         console.log("userDetails: ", userDetails);
-        let { isUserExist } = userDetails;
+        let { success } = userDetails;
 
-        if (isUserExist) {
+        if (success) {
           setUnlock_password(true);
           setlock_submit(true);
           setLock_userfields(true);

@@ -19,10 +19,11 @@ import "react-confirm-alert/src/react-confirm-alert.css";
 export default function Status() {
   let navigate = useNavigate();
   const [loan, setLoan] = useState([]);
+  console.log("loan: ", loan);
   const [temp, setTemp] = useState([]);
   const [custid, setCustID] = useState([]);
   const [error, setError] = useState();
-  const [stepcounter, setStepcounter] = useState();
+  const [stepcounter, setStepcounter] = useState({});
   console.log("stepcounter: ", stepcounter);
   const [validation, setValidation] = useState([]);
   let token = sessionStorage.getItem("token");
@@ -38,7 +39,7 @@ export default function Status() {
     "Approved",
   ];
 
-  const onClickCancel = async (index) => {
+  const onClickCancel = async (id) => {
     confirmAlert({
       customUI: ({ onClose }) => {
         return (
@@ -65,16 +66,19 @@ export default function Status() {
             Authorization: `Bearer ${token}`,
           },
         };
-        const response = axios.put(
-          `http://localhost:8080/api/loan/update/${index}`,
-          {
-            updatetime: timestamp,
-            status: "cancel",
-          },
-          config
-        );
+        const response = axios
+          .put(
+            `${process.env.REACT_APP_API_PORT}/api/loan/update/${id}`,
+            {
+              updatetime: timestamp,
+              status: "cancel",
+            },
+            config
+          )
+          .then((res) => {
+            window.location.reload();
+          });
         setValidation(true);
-        window.location.reload(false);
       } catch (error) {
         setValidation(false);
         console.error(error);
@@ -85,37 +89,43 @@ export default function Status() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get("http://localhost:8080/api/loan/get", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setLoan(res.data.filter((item) => item.custid === parseInt(id)));
-        let appliedstatus = res.data.filter(
-          (loan) => loan.status === "Applied" && loan.custid === parseInt(id)
+        const res = await axios.get(
+          `${process.env.REACT_APP_API_PORT}/api/loan/get`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
-        let rejectedstatus = res.data.filter(
-          (loan) => loan.status === "Rejected" && loan.custid === parseInt(id)
+        console.log("res: ", res);
+        setLoan(res.data?.result?.filter((item) => item.custid === id));
+        let appliedstatus = res.data?.result?.filter(
+          (loan) => loan.status === "Applied" && loan.custid === id
+        );
+        let rejectedstatus = res.data?.result?.filter(
+          (loan) => loan.status === "Rejected" && loan.custid === id
         );
         setValidation(true);
         console.log("appliedstatus: ", appliedstatus);
 
         const stepvalidator = async () => {
-          console.log(appliedstatus[0].currentstatus);
-
-          if (appliedstatus[0].currentstatus === "Approved") {
-            setStepcounter(5);
-          } else if (appliedstatus[0].currentstatus === "Underwriting") {
-            setStepcounter(4);
-          } else if (
-            appliedstatus[0].currentstatus === "Document Verification"
-          ) {
-            setStepcounter(3);
-          } else if (appliedstatus[0].currentstatus === "Background Check") {
-            setStepcounter(2);
-          } else {
-            setStepcounter(1);
-          }
+          console.log("appliedstatus222: ", res.data?.result);
+          let stepperObj = { ...stepcounter };
+          res.data?.result?.forEach((element, i) => {
+            let stepperValue = {
+              Approved: 5,
+              Underwritting: 4,
+              "Document Verification": 3,
+              "Background Check": 2,
+              Applied: 1,
+            };
+            console.log("element: ", { element, i });
+            stepperObj[element?._id] =
+              stepperValue[element?.currentstatus] ?? 1;
+            setStepcounter({
+              ...stepperObj,
+            });
+          });
         };
         await stepvalidator();
       } catch (err) {
@@ -140,7 +150,8 @@ export default function Status() {
         {loan.map((obj, index) => {
           if (obj.status == "Approved" || obj.currentstatus == "Approved") {
             loanFound = true;
-            index = obj.loanid;
+            index = obj._id;
+            console.log("obj: ", obj);
             let creditScore = "";
             let interest = "";
             if (obj.creditscore < 550) {
@@ -166,7 +177,7 @@ export default function Status() {
                 <Card sx={{ minWidth: 500 }}>
                   <CardContent>
                     <Typography gutterBottom variant="h5" component="div">
-                      Loan Ref - NWMLO00{obj.loanid}
+                      Loan Ref - NWMLO00{obj._id}
                     </Typography>
                     <Typography
                       variant="body2"
@@ -189,7 +200,7 @@ export default function Status() {
                     </Typography>
                   </CardContent>
                   <Box sx={{ width: "100%" }}>
-                    <Stepper activeStep={stepcounter} alternativeLabel>
+                    <Stepper activeStep={stepcounter[obj._id]} alternativeLabel>
                       {steps.map((label) => (
                         <Step key={label}>
                           <StepLabel>{label}</StepLabel>
@@ -212,11 +223,9 @@ export default function Status() {
               </div>
             );
           }
-        })}
-        {loan.map((obj, index) => {
           if (obj.status == "Applied" && obj.currentstatus != "Approved") {
             loanFound = true;
-            index = obj.loanid;
+            index = obj._id;
             return (
               <div>
                 <br />
@@ -224,7 +233,7 @@ export default function Status() {
                 <Card sx={{ minWidth: 500 }}>
                   <CardContent>
                     <Typography gutterBottom variant="h5" component="div">
-                      Loan Ref - NWMLO00{obj.loanid}
+                      Loan Ref - NWMLO00{obj._id}
                     </Typography>
                     <Typography
                       variant="body2"
@@ -241,7 +250,7 @@ export default function Status() {
                     </Typography>
                   </CardContent>
                   <Box sx={{ width: "100%" }}>
-                    <Stepper activeStep={stepcounter} alternativeLabel>
+                    <Stepper activeStep={stepcounter[obj._id]} alternativeLabel>
                       {steps.map((label) => (
                         <Step key={label}>
                           <StepLabel>{label}</StepLabel>
@@ -253,7 +262,10 @@ export default function Status() {
                     {/* <Button size="small" onClick={() => console.log(index)}> */}
                     {/* Check Status */}
                     {/* </Button> */}
-                    <Button size="small" onClick={() => onClickCancel(index)}>
+                    <Button
+                      size="small"
+                      onClick={() => onClickCancel(obj.loanId)}
+                    >
                       Cancel
                     </Button>
                   </CardActions>
@@ -264,11 +276,9 @@ export default function Status() {
               </div>
             );
           }
-        })}
-        {loan.map((obj, index) => {
           if (obj.status == "Rejected") {
             loanFound = true;
-            index = obj.loanid;
+            index = obj._id;
             return (
               <div>
                 <br />
@@ -276,7 +286,7 @@ export default function Status() {
                 <Card sx={{ minWidth: 500 }}>
                   <CardContent>
                     <Typography gutterBottom variant="h5" component="div">
-                      Loan Ref - NWMLO00{obj.loanid}
+                      Loan Ref - NWMLO00{obj._id}
                     </Typography>
                     {/* <Typography
                       variant="body2"
@@ -316,8 +326,6 @@ export default function Status() {
               </div>
             );
           }
-        })}
-        {loan.map((obj, index) => {
           if (obj.status == "cancel") {
             loanFound = true;
             return (
@@ -332,7 +340,7 @@ export default function Status() {
                       component="div"
                       style={{ color: "red" }}
                     >
-                      Loan Ref - NWMLO00{obj.loanid}
+                      Loan Ref - NWMLO00{obj._id}
                     </Typography>
                     <Typography
                       variant="body2"

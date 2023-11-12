@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
@@ -21,11 +21,33 @@ import Header from "./Components/Header/Header";
 import Home from "./Components/Home/Home";
 import Loader from "./Components/Loader/Loader";
 import OurProducts from "./Components/Our Products/OurProducts";
-const Login = React.lazy(() => import('./Components/Login/Login'));
-const Dashboard = React.lazy(() => import('./Components/Dashboard/Dashboard'));
+import axios from "axios";
+const Login = React.lazy(() => import("./Components/Login/Login"));
+const Dashboard = React.lazy(() => import("./Components/Dashboard/Dashboard"));
 const Register = React.lazy(() => import("./Components/Register/Register"));
 
 function App() {
+  axios.interceptors.response.use(
+    (config) => {
+      /** In dev, intercepts request and logs it into console for dev */
+      console.info("✉️ ", config);
+      if (
+        !config?.data?.success &&
+        window?.location?.pathname?.includes("dashboard")
+      ) {
+        sessionStorage.removeItem("id");
+        sessionStorage.removeItem("token");
+        window.location.href = "/login";
+      }
+      return config;
+    },
+    (error) => {
+      console.error("✉️ ", error);
+
+      return Promise.reject(error);
+    }
+  );
+
   return (
     <div className="App">
       <BrowserRouter>
@@ -38,9 +60,7 @@ function App() {
           window.location.pathname !== "/admin/enquiry" &&
           window.location.pathname !== "/admin/summary" &&
           window.location.pathname !== "/admin/login" && <Header />}
-        <Suspense
-          fallback={<Loader/>}
-        >
+        <Suspense fallback={<Loader />}>
           <Routes>
             <Route path="" element={<Home />}></Route>
             <Route path="/aboutus" element={<About_Us />}></Route>

@@ -15,11 +15,13 @@ export default function Login() {
   const navigate = useNavigate();
   const sestoken = sessionStorage.getItem("token");
   console.log("sestoken: ", sestoken);
+
   useEffect(() => {
-    // if (sestoken !== null) {
-    //   navigate("/dashboard");
-    // }
-  }, [sestoken]);
+    if (sessionStorage.getItem("token")?.length) {
+      window.location.href = "/dashboard";
+    }
+  }, []);
+
   const formik = useFormik({
     initialValues: {
       custid: "",
@@ -28,29 +30,43 @@ export default function Login() {
     },
     onSubmit: (values) => {
       axios
-        .post("http://localhost:8082/login", {
+        .post(`${process.env.REACT_APP_API_PORT}/login`, {
           custid: values.custid,
           password: values.password,
         })
 
         .then((res) => {
+          console.log("res: ", res);
           let token = res.data.token;
-          let cid = res.data.cid;
-          toast.success("Login Success", {
-            position: "bottom-right",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: 0,
-            theme: "dark",
-          });
-          setTimeout(() => {
-            sessionStorage.setItem("token", token);
-            sessionStorage.setItem("id", cid);
-            navigate("/dashboard/");
-          }, 2000);
+          let cid = res.data.custid;
+          if (!res?.data?.success) {
+            toast.error("Incorrect Credentials!", {
+              position: "bottom-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "colored",
+            });
+          } else {
+            toast.success("Login Success", {
+              position: "bottom-right",
+              autoClose: 2000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: 0,
+              theme: "dark",
+            });
+            setTimeout(() => {
+              sessionStorage.setItem("token", token);
+              sessionStorage.setItem("id", cid);
+              navigate("/dashboard/");
+            }, 2000);
+          }
         })
         .catch((error) => {
           console.log(error.response.data.message);
@@ -72,20 +88,22 @@ export default function Login() {
       custid: yup.string().required("Customer ID cannot be blank"),
     }),
 
-        //     axios.get(`http://localhost:8080/api/cust/get/${cid}`, {
-        //       headers: {
-        //         Authorization: `Bearer ${token}`,
-        //       },
-        //     })
+    //     axios.get(`http://localhost:8080/api/cust/get/${cid}`, {
+    //       headers: {
+    //         Authorization: `Bearer ${token}`,
+    //       },
+    //     })
 
-        //     .catch((err) => {
-        //       console.log(err.response.data.message);
-        //     });
-        // })
+    //     .catch((err) => {
+    //       console.log(err.response.data.message);
+    //     });
+    // })
   });
   if (sestoken == null) {
     return (
-      <div><br/><br/>
+      <div>
+        <br />
+        <br />
         <br />
         <br />
         <div className="forms">
@@ -158,7 +176,10 @@ export default function Login() {
             <br />
           </div>
         </div>
-        <br /><br/><br/><br/>
+        <br />
+        <br />
+        <br />
+        <br />
       </div>
     );
   } else {
