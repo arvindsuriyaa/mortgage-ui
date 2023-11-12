@@ -15,8 +15,17 @@ export default function Summary() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get("http://localhost:8085/nwml/api/loan/get");
-        setEnquiry(res.data.sort((a, b) => a.LoanAmount - b.LoanAmount));
+        const res = await axios.get(
+          `${process.env.REACT_APP_API_PORT}/api/loan/get?type=admin`,
+          {
+            headers: {
+              Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+            },
+          }
+        );
+        setEnquiry(
+          res.data?.result?.sort((a, b) => a.loanamt - b.loanamt)
+        );
         console.log(enquiry);
       } catch (err) {}
     };
@@ -45,7 +54,7 @@ export default function Summary() {
                 <TableBody>
                   {enquiry.map((enq) => (
                     <TableRow key={enq.loanid}>
-                      <TableCell>{enq.loanid}</TableCell>
+                      <TableCell>{enq.loanId}</TableCell>
                       <TableCell>{enq.custid}</TableCell>
                       <TableCell>{enq.loanamt}</TableCell>
                       <TableCell>{enq.currentstatus}</TableCell>

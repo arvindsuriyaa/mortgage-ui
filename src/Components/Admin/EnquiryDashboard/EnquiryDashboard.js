@@ -9,16 +9,22 @@ import {
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Admin_Menu from "../Admin_Menu/Admin_Menu";
-import './EnquiryDashboard.css'
+import "./EnquiryDashboard.css";
 
 export default function EnquiryDashboard() {
   const [enquiry, setEnquiry] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get("http://localhost:8093/api/enquiry/get");
-        setEnquiry(res.data);
-        console.log(enquiry);
+        const res = await axios.get(
+          `${process.env.REACT_APP_API_PORT}/api/enquiry/get?type=admin`,
+          {
+            headers: {
+              Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+            },
+          }
+        );
+        setEnquiry(res.data?.result);
       } catch (err) {}
     };
     fetchData();
@@ -43,9 +49,9 @@ export default function EnquiryDashboard() {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {enquiry.map((enq) => (
-                    <TableRow key={enq.sno}>
-                      <TableCell>{enq.sno}</TableCell>
+                  {enquiry.map((enq, i) => (
+                    <TableRow key={i + 1}>
+                      <TableCell>{i + 1}</TableCell>
                       <TableCell>{enq.name}</TableCell>
                       <TableCell>{enq.message}</TableCell>
                       <TableCell>{enq.email}</TableCell>

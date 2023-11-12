@@ -20,6 +20,8 @@ import React, { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "./Admin_Content.css";
 import Admin_Menu from "../Admin_Menu/Admin_Menu";
+import "react-toastify/dist/ReactToastify.css";
+
 export default function Underwriting() {
   const [loan, setLoan] = useState([]);
   let date = Date();
@@ -32,7 +34,12 @@ export default function Underwriting() {
     setAge[newupdatestatus](event.target.value);
   };
 
-  const steps = ["Approved"];
+  const steps = [
+    "Background Checks",
+    "Document Verification",
+    "Underwriting",
+    "Approved",
+  ];
 
   const stepvalidator = (index) => {
     if (tempstatus[index].approved === false) {
@@ -55,16 +62,23 @@ export default function Underwriting() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get("http://localhost:8085/nwml/api/loan/get");
+        const res = await axios.get(
+          `${process.env.REACT_APP_API_PORT}/api/loan/get?type=admin`,
+          {
+            headers: {
+              Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+            },
+          }
+        );
         setLoan(
-          res.data
+          res.data?.result
             .filter((item) => item.status === "Applied")
             .sort((a, b) => b.creditscore - a.creditscore)
         );
-        loan.sort((a, b) => a.loanid - b.loanid);
+        loan.sort((a, b) => a.loanId - b.loanId);
         let obj1 = {};
         let obj = {};
-        res.data
+        res.data?.result
           .filter((item) => item.status === "Applied")
           .sort((a, b) => b.creditscore - a.creditscore)
           .forEach((item, index) => {
@@ -88,42 +102,37 @@ export default function Underwriting() {
     res[index] = true;
     setTempstatus(res);
 
-    let statusType = steps[newupdatestatus[index] - 4];
-    console.log(statusType);
-    if (statusType != null) {
-      axios
-        .put(`http://localhost:8085/nwml/api/loan/update/${loanId}`, {
+    let statusType = steps[newupdatestatus[index] - 1];
+    console.log("statusType: ", { statusType, loanId });
+    axios
+      .put(
+        `${process.env.REACT_APP_API_PORT}/api/loan/update/${loanId}?type=admin`,
+        {
           currentstatus: statusType,
           updatetime: date,
           status: "Applied",
-        })
-        .then((res) => {
-          toast.success("Success, Status Updated", {
-            position: "bottom-center",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "colored",
-          });
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          },
+        }
+      )
+      .then((res) => {
+        toast.success("Success, Status Updated", {
+          position: "bottom-center",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
         });
-      setTimeout(() => {
-        window.location.reload();
-      }, 2100);
-    } else {
-      toast.error("Please select valid status", {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
       });
-    }
+    setTimeout(() => {
+      window.location.reload();
+    }, 2100);
   };
 
   let onClickCancel = (index, loanId) => {
@@ -134,11 +143,19 @@ export default function Underwriting() {
     let statusType = steps[newupdatestatus[index] - 1];
     console.log("statusType: ", { statusType, loanId });
     axios
-      .put(`http://localhost:8085/nwml/api/loan/update/${loanId}`, {
-        currentstatus: statusType,
-        updatetime: date,
-        status: "Rejected",
-      })
+      .put(
+        `${process.env.REACT_APP_API_PORT}/api/loan/update/${loanId}?type=admin`,
+        {
+          currentstatus: statusType,
+          updatetime: date,
+          status: "Rejected",
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          },
+        }
+      )
       .then((res) => {
         toast.success("Success, Status Updated", {
           position: "bottom-center",
@@ -190,7 +207,7 @@ export default function Underwriting() {
                     <Card sx={{ maxWidth: 550 }}>
                       <CardContent>
                         <Typography gutterBottom variant="h5" component="div">
-                          Loan Ref - NWMLO00{obj.loanid}
+                          Loan Ref - NWMLO00{obj._id}
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
                           Applied on: {obj.applytime}
@@ -238,15 +255,6 @@ export default function Underwriting() {
                           <Step key="1">
                             <StepLabel>Applied</StepLabel>
                           </Step>
-                          <Step key="2">
-                            <StepLabel>Background Check</StepLabel>
-                          </Step>
-                          <Step key="3">
-                            <StepLabel>Document Verification</StepLabel>
-                          </Step>
-                          <Step key="4">
-                            <StepLabel>Underwriting</StepLabel>
-                          </Step>
                           {steps.map((label) => (
                             <Step key={label}>
                               <StepLabel>{label}</StepLabel>
@@ -280,7 +288,7 @@ export default function Underwriting() {
                                 <em>None</em>
                               </MenuItem> */}
                             {steps.map((item, i) => {
-                              return <MenuItem value={i + 4}>{item}</MenuItem>;
+                              return <MenuItem value={i + 1}>{item}</MenuItem>;
                             })}
                           </Select>
                         </FormControl>
@@ -288,14 +296,14 @@ export default function Underwriting() {
                           variant="contained"
                           sx={{ m: 1, minHeight: 55 }}
                           size="large"
-                          onClick={() => updatestatus(index, obj.loanid)}
+                          onClick={() => updatestatus(index, obj.loanId)}
                         >
                           Update Status
                         </Button>
 
                         <Button
                           size="small"
-                          onClick={() => onClickCancel(index)}
+                          onClick={() => onClickCancel(index, obj.loanId)}
                         >
                           Reject
                         </Button>

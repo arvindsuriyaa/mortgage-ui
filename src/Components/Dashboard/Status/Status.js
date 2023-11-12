@@ -114,10 +114,10 @@ export default function Status() {
           res.data?.result?.forEach((element, i) => {
             let stepperValue = {
               Approved: 5,
-              Underwritting: 4,
-              "Document Verification": 3,
-              "Background Check": 2,
-              Applied: 1,
+              Underwritting: 3,
+              "Document Verification": 2,
+              "Background Check": 1,
+              Applied: 0,
             };
             console.log("element: ", { element, i });
             stepperObj[element?._id] =

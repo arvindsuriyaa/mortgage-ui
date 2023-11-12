@@ -20,6 +20,7 @@ import React, { useEffect, useState } from "react";
 import "./Admin_Content.css";
 import { toast, ToastContainer } from "react-toastify";
 import Admin_Menu from "../Admin_Menu/Admin_Menu";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Admin_Content() {
   const [loan, setLoan] = useState([]);
@@ -29,6 +30,7 @@ export default function Admin_Content() {
   const [loanstatus, setLoanstatus] = useState();
   const [tempstatus, setTempstatus] = useState({});
   const [newupdatestatus, setNewupdatestatus] = useState({});
+
   const handleChange = (event) => {
     setAge[newupdatestatus](event.target.value);
   };
@@ -61,16 +63,23 @@ export default function Admin_Content() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get("http://localhost:8085/nwml/api/loan/get");
+        const res = await axios.get(
+          `${process.env.REACT_APP_API_PORT}/api/loan/get?type=admin`,
+          {
+            headers: {
+              Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+            },
+          }
+        );
         setLoan(
-          res.data
+          res.data?.result
             .filter((item) => item.status === "Applied")
             .sort((a, b) => b.creditscore - a.creditscore)
         );
-        loan.sort((a, b) => a.loanid - b.loanid);
+        loan.sort((a, b) => a.loanId - b.loanId);
         let obj1 = {};
         let obj = {};
-        res.data
+        res.data?.result
           .filter((item) => item.status === "Applied")
           .sort((a, b) => b.creditscore - a.creditscore)
           .forEach((item, index) => {
@@ -112,14 +121,22 @@ export default function Admin_Content() {
     res[index] = true;
     setTempstatus(res);
 
-    let statusType = steps[newupdatestatus[index]-1];
+    let statusType = steps[newupdatestatus[index] - 1];
     console.log("statusType: ", { statusType, loanId });
     axios
-      .put(`http://localhost:8085/nwml/api/loan/update/${loanId}`, {
-        currentstatus: statusType,
-        updatetime: date,
-        status: "Applied",
-      })
+      .put(
+        `${process.env.REACT_APP_API_PORT}/api/loan/update/${loanId}?type=admin`,
+        {
+          currentstatus: statusType,
+          updatetime: date,
+          status: "Applied",
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          },
+        }
+      )
       .then((res) => {
         toast.success("Success, Status Updated", {
           position: "bottom-center",
@@ -136,21 +153,28 @@ export default function Admin_Content() {
       window.location.reload();
     }, 2100);
   };
-
 
   let onClickCancel = (index, loanId) => {
     let res = { ...tempstatus };
     res[index] = true;
     setTempstatus(res);
 
-    let statusType = steps[newupdatestatus[index]-1];
+    let statusType = steps[newupdatestatus[index] - 1];
     console.log("statusType: ", { statusType, loanId });
     axios
-      .put(`http://localhost:8085/nwml/api/loan/update/${loanId}`, {
-        currentstatus: statusType,
-        updatetime: date,
-        status: "Rejected",
-      })
+      .put(
+        `${process.env.REACT_APP_API_PORT}/api/loan/update/${loanId}?type=admin`,
+        {
+          currentstatus: statusType,
+          updatetime: date,
+          status: "Rejected",
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          },
+        }
+      )
       .then((res) => {
         toast.success("Success, Status Updated", {
           position: "bottom-center",
@@ -168,159 +192,164 @@ export default function Admin_Content() {
     }, 2100);
   };
 
-  
-
   return (
     <div className="dashboard_container">
-    <Admin_Menu />
-    <div className="admin_content">
-      <br />
-      <div className="admin_loan_container">
-        <div className="row">
-          {loan.map((obj, index) => {
-            if (obj.currentstatus == "Applied") {
-              // loanFound = true;
-              let creditScore = "";
-              let interest = "";
-              if (obj.creditscore < 550) {
-                creditScore = "Very High Risk";
-                interest = 15;
-              } else if (obj.creditscore > 551 && obj.creditscore < 600) {
-                creditScore = "High Risk";
-                interest = 11;
-              } else if (obj.creditscore > 601 && obj.creditscore < 700) {
-                creditScore = "Medium Risk";
-                interest = 9;
-              } else if (obj.creditscore > 701 && obj.creditscore < 799) {
-                creditScore = "Low Risk";
-                interest = 7;
-              } else if (obj.creditscore > 800) {
-                creditScore = "Very Low Risk";
-                interest = 5.5;
-              }
-              console.log(interest[index]);
-              return (
-                <div className="col-sm">
-                  <Card sx={{ maxWidth: 550 }}>
-                    <CardContent>
-                      <Typography gutterBottom variant="h5" component="div">
-                        Loan Ref - NWMLO00{obj.loanid}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        Applied on: {obj.applytime}
-                      </Typography>
-                      <br />
-                      <Typography
-                        variant="body2"
-                        color="text.secondary"
-                        style={{ color: "blue" }}
-                      >
-                        Risk Analysis: {creditScore}
-                      </Typography>
-                      <Typography
-                        variant="body2"
-                        color="text.secondary"
-                        style={{ color: "blue" }}
-                      >
-                        Interest : {interest}%
-                      </Typography>
-                      <Typography variant="body2" color="text.primary">
-                        Customer ID: {obj.custid}
-                      </Typography>
-                      <Typography variant="body2" color="text.primary">
-                        Property Estimate: £{obj.propertyrate}
-                      </Typography>
-
-                      <Typography variant="body2" color="text.primary">
-                        Request Amount: £{obj.loanamt}
-                      </Typography>
-                      <Typography variant="body2" color="text.primary">
-                        Request Tenure: {obj.loantenure} Years
-                      </Typography>
-                      <Typography variant="body2" color="text.primary">
-                        Current Status: {loanstatus}
-                      </Typography>
-                    </CardContent>
-                    <Box sx={{ width: "100%" }}>
-                      <Stepper
-                        activeStep={newupdatestatus[index]}
-                        alternativeLabel
-                      >
-                        <Step key="1">
-                          <StepLabel>Applied</StepLabel>
-                        </Step>
-
-                        {steps.map((label) => (
-                          <Step key={label}>
-                            <StepLabel>{label}</StepLabel>
-                          </Step>
-                        ))}
-                      </Stepper>
-                    </Box>
-
-                    <CardActions>
-                      <FormControl
-                        variant="filled"
-                        sx={{ m: 1, minWidth: 200 }}
-                      >
-                        <InputLabel id="demo-simple-select-filled-label">
-                          Update Status
-                        </InputLabel>
-                        <Select
-                          labelId="demo-simple-select-filled-label"
-                          value={newupdatestatus[index]}
-                          onChange={(e) => {
-                            // debugger
-
-                            let res = { ...newupdatestatus };
-                            res[index] = e.target.value;
-                            setNewupdatestatus(res);
-                          }}
-                          name="currentstatus"
-                          id="currentstatus"
+      <Admin_Menu />
+      <div className="admin_content">
+        <br />
+        <div className="admin_loan_container">
+          <div className="row">
+            {loan.map((obj, index) => {
+              if (
+                obj.currentstatus == "Background Checks" ||
+                obj.currentstatus == "Applied"
+              ) {
+                // loanFound = true;
+                let creditScore = "";
+                let interest = "";
+                if (obj.creditscore < 550) {
+                  creditScore = "Very High Risk";
+                  interest = 15;
+                } else if (obj.creditscore > 551 && obj.creditscore < 600) {
+                  creditScore = "High Risk";
+                  interest = 11;
+                } else if (obj.creditscore > 601 && obj.creditscore < 700) {
+                  creditScore = "Medium Risk";
+                  interest = 9;
+                } else if (obj.creditscore > 701 && obj.creditscore < 799) {
+                  creditScore = "Low Risk";
+                  interest = 7;
+                } else if (obj.creditscore > 800) {
+                  creditScore = "Very Low Risk";
+                  interest = 5.5;
+                }
+                console.log(interest[index]);
+                return (
+                  <div className="col-sm">
+                    <Card sx={{ maxWidth: 550 }}>
+                      <CardContent>
+                        <Typography gutterBottom variant="h5" component="div">
+                          Loan Ref - NWMLO00{obj._id}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          Applied on: {obj.applytime}
+                        </Typography>
+                        <br />
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          style={{ color: "blue" }}
                         >
-                          {/* <MenuItem>
+                          Risk Analysis: {creditScore}
+                        </Typography>
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          style={{ color: "blue" }}
+                        >
+                          Interest : {interest}%
+                        </Typography>
+                        <Typography variant="body2" color="text.primary">
+                          Customer ID: {obj.custid}
+                        </Typography>
+                        <Typography variant="body2" color="text.primary">
+                          Property Estimate: £{obj.propertyrate}
+                        </Typography>
+
+                        <Typography variant="body2" color="text.primary">
+                          Request Amount: £{obj.loanamt}
+                        </Typography>
+                        <Typography variant="body2" color="text.primary">
+                          Request Tenure: {obj.loantenure} Years
+                        </Typography>
+                        <Typography variant="body2" color="text.primary">
+                          Current Status: {loanstatus}
+                        </Typography>
+                      </CardContent>
+                      <Box sx={{ width: "100%" }}>
+                        <Stepper
+                          activeStep={newupdatestatus[index]}
+                          alternativeLabel
+                        >
+                          <Step key="1">
+                            <StepLabel>Applied</StepLabel>
+                          </Step>
+
+                          {steps.map((label) => (
+                            <Step key={label}>
+                              <StepLabel>{label}</StepLabel>
+                            </Step>
+                          ))}
+                        </Stepper>
+                      </Box>
+
+                      <CardActions>
+                        <FormControl
+                          variant="filled"
+                          sx={{ m: 1, minWidth: 200 }}
+                        >
+                          <InputLabel id="demo-simple-select-filled-label">
+                            Update Status
+                          </InputLabel>
+                          <Select
+                            labelId="demo-simple-select-filled-label"
+                            value={newupdatestatus[index]}
+                            onChange={(e) => {
+                              // debugger
+
+                              let res = { ...newupdatestatus };
+                              res[index] = e.target.value;
+                              setNewupdatestatus(res);
+                            }}
+                            name="currentstatus"
+                            id="currentstatus"
+                          >
+                            {/* <MenuItem>
                               <em>None</em>
                             </MenuItem> */}
-                          {steps.map((item, i) => {
-                            return <MenuItem value={i+1}>{item}</MenuItem>;
-                          })}
-                        </Select>
-                      </FormControl>
-                      <Button
-                        variant="contained"
-                        sx={{ m: 1, minHeight: 55 }}
-                        size="large"
-                        onClick={() => updatestatus(index, obj.loanid)}
-                      >
-                        Update Status
-                      </Button>
+                            {steps.map((item, i) => {
+                              return <MenuItem value={i + 1}>{item}</MenuItem>;
+                            })}
+                          </Select>
+                        </FormControl>
+                        <Button
+                          variant="contained"
+                          sx={{ m: 1, minHeight: 55 }}
+                          size="large"
+                          onClick={() => updatestatus(index, obj.loanId)}
+                        >
+                          Update Status
+                        </Button>
 
-                      <Button size="small" onClick={() => onClickCancel(index, obj.loanid)}>
-                      Reject
-                    </Button>
-                    </CardActions>
-                  </Card>
-                  <br />{" "}
-                  <ToastContainer
-                    position="bottom-center"
-                    autoClose={2000}
-                    limit={1}
-                    hideProgressBar={false}
-                    newestOnTop
-                    closeOnClick
-                    rtl={false}
-                    pauseOnFocusLoss
-                    draggable
-                    pauseOnHover
-                    theme="colored"
-                  />
-                </div>
-              );
-            }
-          })}{" "}
+                        <Button
+                          size="small"
+                          onClick={() => onClickCancel(index, obj.loanId)}
+                        >
+                          Reject
+                        </Button>
+                      </CardActions>
+                    </Card>
+                    <br />{" "}
+                    <ToastContainer
+                      position="bottom-center"
+                      autoClose={2000}
+                      limit={1}
+                      hideProgressBar={false}
+                      newestOnTop
+                      closeOnClick
+                      rtl={false}
+                      pauseOnFocusLoss
+                      draggable
+                      pauseOnHover
+                      theme="colored"
+                    />
+                  </div>
+                );
+              }
+            })}{" "}
+          </div>
         </div>
       </div>
-    </div></div>
+    </div>
   );
 }

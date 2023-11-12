@@ -3,17 +3,15 @@ import { Stack } from "@mui/system";
 import axios from "axios";
 import * as yup from "yup";
 import { useFormik } from "formik";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "./Adminlogin.css";
- 
+
 export default function Adminlogin() {
-
-
-
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
+
   const formik = useFormik({
     initialValues: {
       empid: "",
@@ -22,29 +20,23 @@ export default function Adminlogin() {
     },
     onSubmit: (values) => {
       axios
-        .post("http://localhost:8092/login", {
-          empid: values.empid,
+        .post(`${process.env.REACT_APP_API_PORT}/login`, {
+          userName: values.empid,
           password: values.password,
+          admin: true,
         })
 
         .then((res) => {
-          let token = res.data.token;
-          let empid = res.data.cid;
-          toast.success("Login Success", {
-            position: "bottom-right",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: 0,
-            theme: "dark",
-          });
-          setTimeout(() => {
+          if (res?.data?.token) {
+            let token = res.data.token;
+            let empid = res.data.userName;
+
             sessionStorage.setItem("token", token);
             sessionStorage.setItem("id", empid);
-            navigate("/admin/main");
-          }, 2000);
+            window.location.reload();
+          } else {
+            alert(res?.data?.message);
+          }
         })
         .catch((error) => {
           console.log(error.response.data.message);
@@ -69,13 +61,13 @@ export default function Adminlogin() {
     // })
   });
   const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
+    if (reason === "clickaway") {
       return;
     }
 
     setOpen(false);
   };
-  
+
   return (
     <div className="admin_login">
       <img
@@ -90,7 +82,6 @@ export default function Adminlogin() {
               id="empid"
               name="empid"
               label="Employee ID*"
-              type="number"
               value={formik.values.empid}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
@@ -120,7 +111,6 @@ export default function Adminlogin() {
         </form>
         <br />
       </div>
-
     </div>
   );
 }
