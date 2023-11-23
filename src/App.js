@@ -51,15 +51,7 @@ function App() {
   return (
     <div className="App">
       <BrowserRouter>
-        {window.location.pathname !== "/admin" &&
-          window.location.pathname !== "/admin/" &&
-          window.location.pathname !== "/admin/main" &&
-          window.location.pathname !== "/admin/docverification" &&
-          window.location.pathname !== "/admin/underwriting" &&
-          window.location.pathname !== "/admin/approval" &&
-          window.location.pathname !== "/admin/enquiry" &&
-          window.location.pathname !== "/admin/summary" &&
-          window.location.pathname !== "/admin/login" && <Header />}
+        {!window.location.pathname.includes("admin") && <Header />}
         <Suspense fallback={<Loader />}>
           <Routes>
             <Route path="" element={<Home />}></Route>
@@ -91,15 +83,7 @@ function App() {
           </Routes>
         </Suspense>
 
-        {window.location.pathname !== "/admin" &&
-          window.location.pathname !== "/admin/" &&
-          window.location.pathname !== "/admin/main" &&
-          window.location.pathname !== "/admin/docverification" &&
-          window.location.pathname !== "/admin/underwriting" &&
-          window.location.pathname !== "/admin/approval" &&
-          window.location.pathname !== "/admin/enquiry" &&
-          window.location.pathname !== "/admin/summary" &&
-          window.location.pathname !== "/admin/login" && <Footer />}
+        {!window.location.pathname.includes("admin") && <Footer />}
       </BrowserRouter>
     </div>
   );

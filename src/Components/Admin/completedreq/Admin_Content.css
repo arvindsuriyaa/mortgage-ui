@@ -1,16 +1,12 @@
 .admin_loan
 {
     display: flex;
-    justify-content: flex-end;  
     width: 50%;
-    justify-content: flex-end;
     margin-right: 200px;
 }
 .admin_loan_container
 {
     display: flex;
-    justify-content: flex-end;
     width: 70vw;
-    justify-content: flex-end;
     margin-left: 400px;
 }

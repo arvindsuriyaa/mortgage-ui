@@ -65,6 +65,7 @@ export default function Login() {
               sessionStorage.setItem("token", token);
               sessionStorage.setItem("id", cid);
               navigate("/dashboard/");
+              window.location.reload()
             }, 2000);
           }
         })

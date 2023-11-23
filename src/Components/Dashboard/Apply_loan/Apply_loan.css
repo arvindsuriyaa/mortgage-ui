@@ -1,20 +1,16 @@
-.loan_container
-{
-   
+.loan_container {
 }
-.loan_form_container
-{
-    height: 90vh;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.loan_form_container {
+  /* height: 90vh; */
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px 0px;
 }
-.loan_form_header
-{
-    
-    width: 60%;
-    color: red;
-    border: solid 2px orange;
-    padding: 10px;
+.loan_form_header {
+  width: 60%;
+  color: red;
+  border: solid 2px orange;
+  padding: 10px;
 }

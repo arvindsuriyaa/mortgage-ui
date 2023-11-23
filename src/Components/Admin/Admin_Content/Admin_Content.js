@@ -34,7 +34,7 @@ export default function Admin_Content() {
   const handleChange = (event) => {
     setAge[newupdatestatus](event.target.value);
   };
-
+  
   const steps = [
     "Background Checks",
     "Document Verification",

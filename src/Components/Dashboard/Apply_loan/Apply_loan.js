@@ -320,8 +320,28 @@ export default function Apply_loan() {
                 />
               </Stack>
             </form>
+            <br />
+            <b>NOTE:</b>
+            <br />
             *You are limited to a maximum of three requests in a 15-day period
             and cannot apply another request until the current one is completed.
+            <br />
+            ** You are subjected to send all the relavant documents to{" "}
+            <b>
+              <i>admin.mortgage@natwest.com</i>
+            </b>
+            {" "}in the following format:
+            <ul>
+              <li>Pancard in .jpeg format</li>
+              <li>Pay slip for past 3 months in .pdf format</li>
+              <li>
+                Relavant loan documents in single .pdf, which should enclose all
+                details
+              </li>
+              <li>Address proof in .pdf</li>
+            </ul>
+            *** Please note if there is any discrepancy in the documents sent
+            through mail, the application will be liable to rejection.
           </div>
         </div>
       </div>

@@ -33,7 +33,7 @@ export default function Completereq() {
   const [tempstatus, setTempstatus] = useState({});
   // console.log('tempstatus: ', tempstatus);
   const [newupdatestatus, setNewupdatestatus] = useState({});
-  console.log('newupdatestatus: ', newupdatestatus);
+  console.log("newupdatestatus: ", newupdatestatus);
   const handleChange = (event) => {
     setAge[newupdatestatus](event.target.value);
   };
@@ -250,11 +250,8 @@ export default function Completereq() {
                           Current Status: {loanstatus}
                         </Typography>
                       </CardContent>
-                      <Box sx={{ width: "100%" }}>
-                        <Stepper
-                          activeStep={stepcounter}
-                          alternativeLabel
-                        >
+                      <Box sx={{ width: "100%", marginBottom: 5 }}>
+                        <Stepper activeStep={stepcounter} alternativeLabel>
                           <Step key="1">
                             <StepLabel>Applied</StepLabel>
                           </Step>
@@ -266,7 +263,7 @@ export default function Completereq() {
                         </Stepper>
                       </Box>
 
-                      <CardActions>
+                      {/* <CardActions>
                         <FormControl
                           variant="filled"
                           sx={{ m: 1, minWidth: 200 }}
@@ -289,7 +286,7 @@ export default function Completereq() {
                           >
                             {/* <MenuItem>
                               <em>None</em>
-                            </MenuItem> */}
+                            </MenuItem> 
                             {steps.map((item, i) => {
                               return <MenuItem value={i + 1}>{item}</MenuItem>;
                             })}
@@ -310,7 +307,7 @@ export default function Completereq() {
                         >
                           Reject
                         </Button>
-                      </CardActions>
+                      </CardActions> */}
                     </Card>
                     <br />
                     <ToastContainer

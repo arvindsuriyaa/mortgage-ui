@@ -67,12 +67,6 @@ export default function Home() {
             <h3 className="color" data-aos="slide-up">
               Looking for a new deal?
             </h3>
-            <img
-              src="https://assets.fullertonindia.com/sites/default/files/Mortgage-Loan.jpg?5VMhWe3hAz4q5tFKX3.LDFhAK3Oo6cl3"
-              className="image"
-              data-aos="slide-up"
-              width="500px"
-            />
             <p className="p" data-aos="slide-up">
               {" "}
               If your current NatWest mortgage deal is ending or you’re on

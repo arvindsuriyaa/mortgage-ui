@@ -2,13 +2,14 @@ import React from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import "./Admin_Menu.css";
 export default function Admin_Menu() {
-  const navigate = useNavigate()
-  const logout = () =>
-  {
-    sessionStorage.removeItem('id')
-    sessionStorage.removeItem('token')
-    navigate('/admin')
-  }
+  const navigate = useNavigate();
+  
+  const logout = () => {
+    sessionStorage.removeItem("id");
+    sessionStorage.removeItem("token");
+    navigate("/admin");
+  };
+
   return (
     <div className="admin_menu_header">
       <div className="header_logos_container">
@@ -40,7 +41,9 @@ export default function Admin_Menu() {
         <NavLink to="/admin/summary" activeclassname="active" exact="true">
           Summary
         </NavLink>
-        <div className="logout_bttn" onClick={logout}><i className="fas fa-power-off"></i></div> 
+        <div className="logout_bttn" onClick={logout}>
+          <i className="fas fa-power-off"></i>
+        </div>
       </div>
     </div>
   );
