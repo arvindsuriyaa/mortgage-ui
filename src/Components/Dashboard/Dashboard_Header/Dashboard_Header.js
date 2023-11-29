@@ -16,13 +16,13 @@ export default function Dashboard_Header() {
           className="header_logo"
           src="https://i.ibb.co/JxHBLGf/logo-png.png"
         ></img>
-        <div style={{ marginTop: "10px" }}>
+        {/* <div style={{ marginTop: "10px" }}>
           co-powered by {"  "}
           <img
             className="header_logo"
             src="https://companieslogo.com/img/orig/IEL.AX_BIG.D-fe966b2b.png?t=1648021418"
           ></img>
-        </div>
+        </div> */}
       </div>
       <div className="menu">
         <NavLink to="/dashboard/" activeclassname="active" exact="true">
